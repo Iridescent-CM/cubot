@@ -17,6 +17,3 @@ module.exports = (robot) ->
     thing = msg.match[1]    
     console.log thing
     msg.reply "Logged #{thing}"
-
-  robot.respond /:cookie:/i, (msg) ->
-    msg.reply "OM NOM NOM"
