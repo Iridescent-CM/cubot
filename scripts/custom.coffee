@@ -8,7 +8,7 @@
 #   None
 #
 # Commands:
-#   hubot log N - Log N to console whereever hubot lives
+#   hubot log <thing> - Log <thing> to console whereever hubot lives
 #   hubot :cookie: - Give hubot a :cookie:
 
 module.exports = (robot) ->
