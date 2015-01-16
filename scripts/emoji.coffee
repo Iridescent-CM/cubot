@@ -24,4 +24,5 @@ module.exports = (robot) ->
       when ":point_up:", ":point_up_2:" then ":point_down:"
       when ":point_down:" then ":point_up_2:"
       when ":poop:" then ":toilet:"
+      when ":sos:" then "http://www.emoji-cheat-sheet.com/"
       else ":no_entry:"
