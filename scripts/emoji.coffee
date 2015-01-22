@@ -27,4 +27,7 @@ module.exports = (robot) ->
       when ":sos:" then "http://www.emoji-cheat-sheet.com/"
       when ":cloud:" then ":zap:"
       when ":zap:" then ":skull:"
+      when ":zzz:" 
+        opts = [":rooster:", ":alarm_clock:", ":coffee:", ":tea:"]
+        opts[Math.floor(Math.random() * opts.length)]
       else ":no_entry:"
