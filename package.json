@@ -6,6 +6,7 @@
   "description": "A simple helpful robot for Curiosity Machine",
   "dependencies": {
     "hubot": "^2.10.0",
+    "hubot-business-cat": "^1.1.10",
     "hubot-diagnostics": "0.0.1",
     "hubot-gitter": "0.0.3",
     "hubot-gitter2": "^0.1.3",
