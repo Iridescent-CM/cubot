@@ -10,10 +10,18 @@
 # Commands:
 #   hubot <emoji> - Give hubot an emoji and see what he responds
 
+# handled in other scripts
+SKIP = [
+  ":8ball:",
+  ":crystal_ball:"
+]
+
 module.exports = (robot) ->
 
   robot.respond /(:[a-z0-9_+-]+:)/i, (msg) =>
     emoji = msg.match[1]
+    if emoji in SKIP
+      return
     msg.reply switch emoji
       when ":cookie:" then "OM NOM NOM!"
       when ":metal:" then ":fire: :guitar: :fire:"
