@@ -8,7 +8,7 @@
 //   None
 //
 // Commands:
-//   hubot :8ball:|:crystal_ball: <question> - Consult the magic 8 ball
+//   hubot :8ball: or :crystal_ball: <question> - Consult the magic 8 ball
 
 var WISDOM = [
   "It is certain",
