@@ -12,9 +12,11 @@
 //   hubot undibs on <thing> - Release your dibs
 
 module.exports = function(robot) {
-  robot.hear(/\bdibs on (.+)/i, function(msg) {
+  robot.hear(/\bdibs on (.+)\b/i, function(msg) {
     var env = msg.match[1].trim()
     var user = msg.envelope.user.name;
+    result = user.match(/\(([^)]+)\)/);
+    if (result) user = result[0];
     var key = 'dibs_' + env;
 
     var dibsHolder = robot.brain.get(key);
@@ -27,9 +29,11 @@ module.exports = function(robot) {
     }
   });
 
-  robot.respond(/undibs on (.+)/i, function(msg) {
+  robot.hear(/undibs on (.+)\b/i, function(msg) {
     var env = msg.match[1].trim()
     var user = msg.envelope.user.name;
+    result = user.match(/\(([^)]+)\)/);
+    if (result) user = result[0];
     var key = 'dibs_' + env;
 
     var dibsHolder = robot.brain.get(key);
