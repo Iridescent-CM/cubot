@@ -13,28 +13,28 @@
 
 module.exports = function(robot) {
   robot.hear(/\bdibs on (.+)/i, function(msg) {
-    var env = msg.match[1].trim()
+    var thing = msg.match[1].trim()
     var user = msg.envelope.user.name;
     result = user.match(/\(([^)]+)\)/);
     if (result) user = result[1];
-    var key = 'dibs_' + env;
+    var key = 'dibs_' + thing;
 
     var dibsHolder = robot.brain.get(key);
     if (dibsHolder && user !== dibsHolder) {
-      msg.reply(':collision: @' + dibsHolder + ' has dibs on ' + env);
+      msg.reply(':collision: @' + dibsHolder + ' has dibs on ' + thing);
     }
     else {
       robot.brain.set(key, user);
-      msg.reply(':thumbsup: dibs granted');
+      msg.reply(':thumbsup: dibs granted for ' + thing);
     }
   });
 
   robot.hear(/undibs on (.+)/i, function(msg) {
-    var env = msg.match[1].trim()
+    var thing = msg.match[1].trim()
     var user = msg.envelope.user.name;
     result = user.match(/\(([^)]+)\)/);
     if (result) user = result[1];
-    var key = 'dibs_' + env;
+    var key = 'dibs_' + thing;
 
     var dibsHolder = robot.brain.get(key);
     if (!dibsHolder || user === dibsHolder) {
@@ -42,7 +42,7 @@ module.exports = function(robot) {
       msg.reply(':thumbsup: dibs released');
     }
     else {
-      msg.reply(':collision: @' + dibsHolder + ' has dibs on ' + env);
+      msg.reply(':collision: @' + dibsHolder + ' has dibs on ' + thing);
     }
   });
 };
