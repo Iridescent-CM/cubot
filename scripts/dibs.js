@@ -39,7 +39,7 @@ module.exports = function(robot) {
     var dibsHolder = robot.brain.get(key);
     if (!dibsHolder || user === dibsHolder) {
       robot.brain.set(key, undefined);
-      msg.reply(':thumbsup: dibs released');
+      msg.reply(':thumbsup: ' + thing + ' released');
     }
     else {
       msg.reply(':collision: @' + dibsHolder + ' has dibs on ' + thing);
