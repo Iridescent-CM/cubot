@@ -18,7 +18,7 @@ SKIP = [
 
 module.exports = (robot) ->
 
-  robot.respond /(:[a-z0-9_+-]+:)/i, (msg) =>
+  robot.respond /(:[a-z0-9_+-:\s]+:)/i, (msg) =>
     emoji = msg.match[1]
     if emoji in SKIP
       return
