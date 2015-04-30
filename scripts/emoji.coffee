@@ -39,4 +39,5 @@ module.exports = (robot) ->
         opts = [":rooster:", ":alarm_clock:", ":coffee:", ":tea:"]
         opts[Math.floor(Math.random() * opts.length)]
       when ":meat_on_bone:" then ":fork_and_knife:"
+      when ":sunglasses: :point_right: :point_right:" then ":point_left: :point_left: :sunglasses:"
       else ":no_entry:"
