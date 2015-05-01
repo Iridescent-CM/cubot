@@ -18,7 +18,7 @@ SKIP = [
 
 module.exports = (robot) ->
 
-  robot.respond /(:[a-z0-9_+-:\s]+:)/i, (msg) =>
+  robot.respond /[^:]*(:[a-z0-9_+-:\s]+:)[^:]*/i, (msg) =>
     emoji = msg.match[1]
     if emoji in SKIP
       return
@@ -35,9 +35,11 @@ module.exports = (robot) ->
       when ":sos:" then "http://www.emoji-cheat-sheet.com/"
       when ":cloud:" then ":zap:"
       when ":zap:" then ":skull:"
-      when ":zzz:" 
+      when ":zzz:"
         opts = [":rooster:", ":alarm_clock:", ":coffee:", ":tea:"]
         opts[Math.floor(Math.random() * opts.length)]
       when ":meat_on_bone:" then ":fork_and_knife:"
       when ":sunglasses: :point_right: :point_right:" then ":point_left: :point_left: :sunglasses:"
-      else ":no_entry:"
+      else
+        console.log(emoji, "does not compute")
+        ":no_entry:"
