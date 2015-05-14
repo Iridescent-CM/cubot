@@ -42,8 +42,6 @@ module.exports = (robot) ->
       when ":sunglasses: :point_right: :point_right:" then ":point_left: :point_left: :sunglasses:"
       when ":sunny:"
         rs = [
-          ":sunny:   :cloud:",
-          ":sunny:  :cloud:",
           ":sunny: :cloud:",
           ":sunny::cloud:",
           ":partly_sunny:",
