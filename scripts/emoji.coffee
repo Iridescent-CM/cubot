@@ -40,6 +40,22 @@ module.exports = (robot) ->
         opts[Math.floor(Math.random() * opts.length)]
       when ":meat_on_bone:" then ":fork_and_knife:"
       when ":sunglasses: :point_right: :point_right:" then ":point_left: :point_left: :sunglasses:"
+      when ":sunny:"
+        rs = [
+          ":sunny:   :cloud:",
+          ":sunny:  :cloud:",
+          ":sunny: :cloud:",
+          ":sunny::cloud:",
+          ":partly_sunny:",
+          ":cloud:",
+          ":umbrella:"
+        ]
+        for r, i in rs[1..] 
+          do (r) ->
+            setTimeout ( ->
+              msg.reply r
+            ), (i + 1) * 2000
+        rs[0]
       else
         console.log(emoji, "does not compute")
         ":no_entry:"
