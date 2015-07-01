@@ -17,7 +17,7 @@ module.exports = function(robot) {
     msg.reply("Logged " + thing)
   });
 
-  robot.respond(/^debug$/i, function(res) {
+  robot.respond(/debug/i, function(res) {
     console.log(res)
   });
 
