@@ -17,6 +17,10 @@ module.exports = function(robot) {
     msg.reply("Logged " + thing)
   });
 
+  robot.respond(/^debug$/i, function(res) {
+    console.log(res)
+  });
+
   robot.respond(/i fixed it/i, function(msg) {
     msg.reply("Have a :cookie:");
     setTimeout(function(){
