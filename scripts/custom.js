@@ -23,4 +23,9 @@ module.exports = function(robot) {
       msg.reply("Now get back to work.");
     }, 10000);
   });
+
+  robot.hear(/:\+1:|:thumbsup:/, function(res) {
+    if (res.message.user.name === 'cat' && res.message.room === 'dev-team')
+      res.send('http://www.reactiongifs.us/wp-content/uploads/2014/01/thumbs_up_cat.gif')
+  });
 }
