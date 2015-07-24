@@ -30,7 +30,7 @@ module.exports = function(robot) {
 
   robot.hear(/:\+1:|:thumbsup:/, function(res) {
     if (res.message.user.name === 'cat' && res.message.room === 'dev-team')
-      res.send('http://www.reactiongifs.us/wp-content/uploads/2014/01/thumbs_up_cat.gif')
+      res.send('https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/thumbs_up_cat.gif')
   });
 
   robot.hear(/:[a-zA-Z_]*tongue[a-zA-Z_]*:/, function(res) {
