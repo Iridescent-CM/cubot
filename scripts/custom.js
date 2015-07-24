@@ -34,6 +34,11 @@ module.exports = function(robot) {
   });
 
   robot.hear(/:[a-zA-Z_]*tongue[a-zA-Z_]*:/, function(res) {
+    var gifs = [
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/tongue1.gif',
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/tongue2.gif'
+    ];
     if (res.message.user.name === 'savannah' && res.message.room === 'dev-team')
-      res.send('https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/tongue1.gif')
+      res.send(gifs[Math.floor(Math.random()*gifs.length)])
+  });
 }
