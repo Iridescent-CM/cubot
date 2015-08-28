@@ -41,4 +41,15 @@ module.exports = function(robot) {
     if (res.message.user.name === 'savannah' && res.message.room === 'dev-team')
       res.send(gifs[Math.floor(Math.random()*gifs.length)])
   });
+
+  robot.hear(/good morn/i, function(res) {
+    var gifs = [
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/spider1.gif',
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/spider2.gif',
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/spider3.gif',
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/spider4.gif',
+    ];
+    if (res.message.user.name === 'christensenep' && res.message.room === 'dev-team')
+      res.send(gifs[Math.floor(Math.random()*gifs.length)]);
+  });
 }
