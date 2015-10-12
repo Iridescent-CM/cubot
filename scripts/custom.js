@@ -53,7 +53,7 @@ module.exports = function(robot) {
       res.send(gifs[Math.floor(Math.random()*gifs.length)]);
   });
 
-  robot.hear(/:\+1:|:thumbsup:/, function(res) {
+  robot.hear(/heh/, function(res) {
     if (res.message.user.name === 'mike' && res.message.room === 'dev-team')
       res.send('https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/heh.gif')
   });
