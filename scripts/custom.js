@@ -58,4 +58,14 @@ module.exports = function(robot) {
       res.send('https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/heh.gif')
   });
 
+  robot.hear(/drake/i, function(res) {
+    var gifs = [
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/drake1.gif',
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/drake2.gif',
+      'https://raw.githubusercontent.com/Iridescent-CM/cubot/master/scripts/gifs/drake3.gif',
+    ];
+    if (res.message.user.name === 'devin' && res.message.room === 'coffee-break')
+      res.send(gifs[Math.floor(Math.random()*gifs.length)]);
+  });
+
 }
