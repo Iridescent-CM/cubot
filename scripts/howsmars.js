@@ -10,7 +10,7 @@
 var BRAINKEY = 'howsmars_last';
 
 module.exports = function(robot) {
-  robot.respond(/.*how's mars.*/i, function(msg) {
+  robot.respond(/.*(how's|how is) mars.*/i, function(msg) {
     var yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     var date = yesterday.getFullYear() + "-" + (yesterday.getMonth() + 1) + "-" + yesterday.getDate();
