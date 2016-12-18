@@ -45,7 +45,7 @@ module.exports = function(robot) {
       var photos = body.photos;
       var last = robot.brain.get(BRAINKEY);
       if (last == null) last = 0;
-      last = last++ % photos.length;
+      last = ++last % photos.length;
       robot.brain.set(BRAINKEY, last);
 
       var responses = [
