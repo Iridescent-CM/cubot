@@ -7,7 +7,18 @@
 // Commands:
 //   hubot how's Mars today?
 
-var BRAINKEY = 'howsmars_last';
+var DATE_BRAINKEY = 'howsmars_last_date';
+var IDX_BRAINKEY = 'howsmars_last_idx';
+
+var CAM_ORDER = {
+  "FHAZ": 1,
+  "NAVCAM": 1,
+  "MAST": 1,
+  "MAHLI": 1,
+  "MARDI": 1,
+  "RHAZ": 1,
+  "CHEMCAM": 2,
+}
 
 module.exports = function(robot) {
   robot.respond(/.*(how's|how is) mars.*/i, function(msg) {
@@ -43,10 +54,19 @@ module.exports = function(robot) {
       }
 
       var photos = body.photos;
-      var last = robot.brain.get(BRAINKEY);
-      if (last == null) last = 0;
-      last = ++last % photos.length;
-      robot.brain.set(BRAINKEY, last);
+      photos.sort(function(a, b) {
+        return CAM_ORDER[a.camera.name] - CAM_ORDER[b.camera.name];
+      });
+
+      var last_idx = -1;
+      var last_date = robot.brain.get(DATE_BRAINKEY);
+      if (last_date && last_date === date) {
+        last_idx = robot.brain.get(IDX_BRAINKEY);
+      }
+
+      var idx = (last_idx + 1) % photos.length;
+      robot.brain.set(IDX_BRAINKEY, idx);
+      robot.brain.set(DATE_BRAINKEY, date);
 
       var responses = [
         "Lookin' Mars-y!",
@@ -58,7 +78,7 @@ module.exports = function(robot) {
         "It's red."
       ];
       var response = responses[Math.floor(Math.random() * responses.length)];
-      msg.reply(response + " " + photos[last].img_src);
+      msg.reply(response + " " + photos[idx].img_src);
     });
   });
 };
