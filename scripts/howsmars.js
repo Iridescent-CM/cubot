@@ -7,8 +7,11 @@
 // Commands:
 //   hubot how's Mars today?
 
+var moment = require('moment');
+
 var DATE_BRAINKEY = 'howsmars_last_date';
 var IDX_BRAINKEY = 'howsmars_last_idx';
+var CACHE_BRAINKEY = 'howsmars_cache';
 
 var CAM_ORDER = {
   "FHAZ": 1,
@@ -22,9 +25,7 @@ var CAM_ORDER = {
 
 module.exports = function(robot) {
   robot.respond(/.*(how['’]s|how is) mars.*/i, function(msg) {
-    var yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    var date = yesterday.getFullYear() + "-" + (yesterday.getMonth() + 1) + "-" + yesterday.getDate();
+    var date = moment().subtract(1, 'days').format('YYYY-MM-DD')
     var key = process.env.NASA_API_KEY || "DEMO_KEY";
 
     robot.http(
@@ -46,7 +47,11 @@ module.exports = function(robot) {
 
       if (body.errors) {
         if (body.errors == "No Photos Found") {
-          return msg.reply("Hmm, no photos from yesterday yet.");
+          body = robot.brain.get(CACHE_BRAINKEY);
+          if (!body) {
+            return msg.reply("Hmm, no photos from yesterday yet, and my cache is empty.");
+          }
+          date = robot.brain.get(DATE_BRAINKEY);
         }
         else {
           return msg.reply("Hmm, what does '" + body.errors + "' mean? :boom:");
@@ -67,6 +72,7 @@ module.exports = function(robot) {
       var idx = (last_idx + 1) % photos.length;
       robot.brain.set(IDX_BRAINKEY, idx);
       robot.brain.set(DATE_BRAINKEY, date);
+      robot.brain.set(CACHE_BRAINKEY, body);
 
       var responses = [
         "Lookin' Mars-y!",
