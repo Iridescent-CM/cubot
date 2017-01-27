@@ -7,10 +7,11 @@
 // Commands:
 //   hubot asteroid report
 
+var moment = require('moment');
+
 module.exports = function(robot) {
   robot.respond(/.*asteroid report.*/i, function(msg) {
-    var today = new Date();
-    var start_date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    var start_date = moment().format('YYYY-MM-DD')
     var key = process.env.NASA_API_KEY || "DEMO_KEY";
     robot.http("https://api.nasa.gov/neo/rest/v1/feed?start_date=" + start_date + "&end_date=" + start_date + "&api_key=" + key).get()(function(err, res, body){
       if (err) {
