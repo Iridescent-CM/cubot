@@ -52,6 +52,7 @@ module.exports = function(robot) {
             return msg.reply("Hmm, no photos from yesterday yet, and my cache is empty.");
           }
           date = robot.brain.get(DATE_BRAINKEY);
+          console.log("Using cache from", date);
         }
         else {
           return msg.reply("Hmm, what does '" + body.errors + "' mean? :boom:");
@@ -73,6 +74,7 @@ module.exports = function(robot) {
       robot.brain.set(IDX_BRAINKEY, idx);
       robot.brain.set(DATE_BRAINKEY, date);
       robot.brain.set(CACHE_BRAINKEY, body);
+      console.log("Showing photo", idx, "of", photos.length, "from", date);
 
       var responses = [
         "Lookin' Mars-y!",
