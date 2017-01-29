@@ -7,11 +7,9 @@
 // Commands:
 //   hubot how's Mars today?
 
-var moment = require('moment');
+var Promise = require('promise');
 
-var DATE_BRAINKEY = 'howsmars_last_date';
-var IDX_BRAINKEY = 'howsmars_last_idx';
-var CACHE_BRAINKEY = 'howsmars_cache';
+var BRAIN_KEY = 'hows_mars_cache';
 
 var CAM_ORDER = {
   "FHAZ": 1,
@@ -23,11 +21,36 @@ var CAM_ORDER = {
   "CHEMCAM": 2,
 }
 
-module.exports = function(robot) {
-  robot.respond(/.*(how['’]s|how is) mars.*/i, function(msg) {
-    var date = moment().subtract(1, 'days').format('YYYY-MM-DD')
-    var key = process.env.NASA_API_KEY || "DEMO_KEY";
+function get_manifest(robot, key) {
+  return new Promise(function(resolve, reject) {
+    robot.http(
+      "https://api.nasa.gov/mars-photos/api/v1/manifests/Curiosity" +
+      "?api_key=" + key
+    ).get()(function(err, res, body) {
+      if (err) {
+        console.log("how's mars error:", err);
+        return reject("Dunno, NASA won't talk to me :sob:");
+      }
 
+      try {
+        body = JSON.parse(body);
+      } catch (ex) {
+        console.log("how's mars error:", ex);
+        return reject("I'm not sure, NASA's speaking gibberish :alien:");
+      }
+
+      if (body.errors) {
+        console.log("how's mars error:", body.errors);
+        return reject("Hmm, what does '" + body.errors + "' mean? :boom:");
+      }
+
+      return resolve(body.photo_manifest.max_date);
+    });
+  });
+}
+
+function fetch_photos(robot, key, date) {
+  return new Promise(function(resolve, reject) {
     robot.http(
       "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?" +
       "earth_date=" + date +
@@ -35,28 +58,19 @@ module.exports = function(robot) {
     ).get()(function(err, res, body){
       if (err) {
         console.log("how's mars error:", err);
-        return msg.reply("Dunno, NASA won't talk to me :sob:");
+        return reject("Dunno, NASA won't talk to me :sob:");
       }
 
       try {
         body = JSON.parse(body);
       } catch (ex) {
         console.log("how's mars error:", ex);
-        return msg.reply("I'm not sure, NASA's speaking gibberish :alien:");
+        return reject("I'm not sure, NASA's speaking gibberish :alien:");
       }
 
       if (body.errors) {
-        if (body.errors == "No Photos Found") {
-          body = robot.brain.get(CACHE_BRAINKEY);
-          if (!body) {
-            return msg.reply("Hmm, no photos from yesterday yet, and my cache is empty.");
-          }
-          date = robot.brain.get(DATE_BRAINKEY);
-          console.log("Using cache from", date);
-        }
-        else {
-          return msg.reply("Hmm, what does '" + body.errors + "' mean? :boom:");
-        }
+        console.log("how's mars error:", body.errors);
+        return reject("Hmm, what does '" + body.errors + "' mean? :boom:");
       }
 
       var photos = body.photos;
@@ -64,29 +78,68 @@ module.exports = function(robot) {
         return CAM_ORDER[a.camera.name] - CAM_ORDER[b.camera.name];
       });
 
-      var last_idx = -1;
-      var last_date = robot.brain.get(DATE_BRAINKEY);
-      if (last_date && last_date === date) {
-        last_idx = robot.brain.get(IDX_BRAINKEY);
-      }
-
-      var idx = (last_idx + 1) % photos.length;
-      robot.brain.set(IDX_BRAINKEY, idx);
-      robot.brain.set(DATE_BRAINKEY, date);
-      robot.brain.set(CACHE_BRAINKEY, body);
-      console.log("Showing photo", idx, "of", photos.length, "from", date);
-
-      var responses = [
-        "Lookin' Mars-y!",
-        "Martian.",
-        "Looks dry.",
-        "Kinda lonely.",
-        "WAS THAT A MARTIAN??",
-        "Where are the people?",
-        "It's red."
-      ];
-      var response = responses[Math.floor(Math.random() * responses.length)];
-      msg.reply(response + " " + photos[idx].img_src);
+      return resolve({
+        photos: photos,
+        date: date,
+        idx: 0
+      });
     });
+  });
+}
+
+function get_photos(robot, key) {
+  return function(max_date) {
+    var cached = robot.brain.get(BRAIN_KEY);
+    if (cached && cached.date == max_date) {
+      console.log("how's mars using cache from", cached.date);
+      return cached;
+    }
+    else {
+      return fetch_photos(robot, key, max_date);
+    }
+  };
+}
+
+function respond(msg) {
+  return function(obj) {
+    var photos = obj.photos;
+    var idx = obj.idx;
+    var date = obj.date;
+
+    console.log("Showing photo", idx, "of", photos.length, "from", date);
+
+    var responses = [
+      "Lookin' Mars-y!",
+      "Martian.",
+      "Looks dry.",
+      "Kinda lonely.",
+      "WAS THAT A MARTIAN??",
+      "Where are the people?",
+      "It's red."
+    ];
+    var response = responses[Math.floor(Math.random() * responses.length)];
+    msg.reply(response + " " + photos[idx].img_src);
+    return obj;
+  }
+}
+
+function update_cache(robot) {
+  return function (obj) {
+    obj.idx = (obj.idx + 1) % obj.photos.length;
+    robot.brain.set(BRAIN_KEY, obj);
+  }
+}
+
+module.exports = function(robot) {
+  robot.respond(/.*(how['’]s|how is) mars.*/i, function(msg) {
+    var key = process.env.NASA_API_KEY || "DEMO_KEY";
+
+    get_manifest(robot, key)
+      .then(get_photos(robot, key))
+      .then(respond(msg))
+      .then(update_cache(robot))
+      .catch(function(err) {
+        msg.reply(err);
+      });
   });
 };
