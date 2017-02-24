@@ -13,7 +13,8 @@
 # handled in other scripts
 SKIP = [
   ":8ball:",
-  ":crystal_ball:"
+  ":crystal_ball:",
+  ":rocket:"
 ]
 
 module.exports = (robot) ->
