@@ -65,6 +65,10 @@ module.exports = function(robot) {
         rocketmsg += " (" + launch.rocket.wikiURL + ")";
       }
 
+      var statusmsg = "Unrecognized status";
+      if (launch.status == 1) statusmsg = "Launch is GO";
+      else if (launch.status == 2) statusmsg = "Launch is NO-GO";
+
       var reply = "";
 
       reply += ":rocket: *Next launch*\n";
@@ -76,8 +80,8 @@ module.exports = function(robot) {
         var mission = launch.missions[idx];
         reply += "  _" + mission.name + "_: " + mission.description + "\n";
       }
+      reply += "*Status*: " + statusmsg + "\n";
 
-      /* TODO: verify launch status? */
       msg.reply(reply);
     };
   }
