@@ -50,37 +50,31 @@ module.exports = function(robot) {
   function respond(msg) {
     return function(launch) {
 
-      var reply = "";
-      reply += ":rocket: *Next launch*\n";
-      reply += launch.net + "\n";
-
       if (launch.location.pads.length > 1) {
         console.log("launch.js: more than 1 pad! Ur assumption was WRONG.");
       }
+
       var pad = launch.location.pads[0];
-      var padmsg = "";
+      var padmsg = pad.name;
       if (pad.mapURL) {
-        padmsg = "<" + pad.mapURL + "|" + pad.name + ">";
-      }
-      else {
-        padmsg = pad.name;
+        padmsg += " (" + pad.mapURL + ")";
       }
 
       var rocketmsg = launch.rocket.name;
       if (launch.rocket.wikiURL) {
-        rocketmsg = "<" + launch.rocket.wikiURL + "|" + launch.rocket.name + ">";
+        rocketmsg += " (" + launch.rocket.wikiURL + ")";
       }
 
-      reply += rocketmsg + " launching from " + padmsg
-      if (launch.missions.length == 1) {
-        reply += " on mission:\n";
-      }
-      else if (launch.missions.length > 1) {
-        reply += " on missions:\n";
-      }
+      var reply = "";
+
+      reply += ":rocket: *Next launch*\n";
+      reply += "*When*: " + launch.net + "\n";
+      reply += "*Where*: " + padmsg + "\n";
+      reply += "*Rocket*: " + rocketmsg + "\n";
+      reply += "*Missions*:\n";
       for (var idx=0; idx < launch.missions.length; idx++) {
         var mission = launch.missions[idx];
-        reply += "*" + mission.name + "*: " + mission.description + "\n";
+        reply += "  _" + mission.name + "_: " + mission.description + "\n";
       }
 
       /* TODO: verify launch status? */
@@ -88,7 +82,7 @@ module.exports = function(robot) {
     };
   }
 
-  robot.respond(/:rocket:?/i, function(msg) {
+  robot.respond(/:rocket: *?/i, function(msg) {
     get_next_launch()
       .then(respond(msg))
       .catch(function(err) {
